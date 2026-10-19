@@ -10,7 +10,7 @@ public class Employee {
     private String role;
     private double percentCompleted;
 
-    public Employee(String name, long salary, LocalDate joinedDate, String role, double percentCompleted) {
+    public Employee(String name, double salary, LocalDate joinedDate, String role, double percentCompleted) {
         this.name = name;
         this.salary = salary;
         this.joinedDate = joinedDate;
