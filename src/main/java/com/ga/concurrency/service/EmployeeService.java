@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.ReentrantLock;
@@ -32,9 +33,21 @@ public class EmployeeService {
 
         ExecutorService executor = Executors.newFixedThreadPool(4);
 
+        Semaphore semaphore = new Semaphore(2);
+
         for(Employee e: employees){
             executor.execute(()-> {
-                e.setNewSalary(calculator.calculateNewSalary(e));
+                try{
+                    semaphore.acquire();
+                    try {
+                        e.setNewSalary(calculator.calculateNewSalary(e));
+                    }finally {
+                        semaphore.release();
+                    }
+                }catch (InterruptedException ex){
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(ex);
+                }
                 processedCount.incrementAndGet();
                 if(e.getNewSalary() > e.getSalary()){
                     raisesGivenCount.incrementAndGet();
