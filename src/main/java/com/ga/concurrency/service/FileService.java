@@ -1,5 +1,6 @@
 package com.ga.concurrency.service;
 
+import com.ga.concurrency.exceptions.InvalidFileException;
 import com.ga.concurrency.model.Employee;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +17,7 @@ import java.util.Scanner;
 public class FileService {
 
     public List<Employee> readEmployees(MultipartFile file){
+        validate(file);
         List<Employee> employees = new ArrayList<>();
 
         try{
@@ -37,5 +39,15 @@ public class FileService {
         }
 
         return employees;
+    }
+
+    private void validate(MultipartFile file){
+        if(file == null || file.isEmpty()){
+            throw new InvalidFileException("File is empty");
+        }
+        String name = file.getOriginalFilename();
+        if(name == null || !name.toLowerCase().endsWith(".csv")){
+            throw new InvalidFileException("Only .csv files are allowed");
+        }
     }
 }
