@@ -5,9 +5,8 @@ import com.ga.concurrency.model.Employee;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +48,19 @@ public class FileService {
         if(name == null || !name.toLowerCase().endsWith(".csv")){
             throw new InvalidFileException("Only .csv files are allowed");
         }
+    }
+
+    public Path writeEmployees(List<Employee> employees) throws IOException {
+        String fileName = "updated_employees_" + System.currentTimeMillis() + ".csv";
+        FileWriter fw = new FileWriter(fileName);
+        try(PrintWriter writer = new PrintWriter(fw)){
+            writer.println("name,role,joinedDate,percentCompleted,oldSalary,newSalary");
+            for(Employee e: employees){
+                writer.println(e.getName() + "," + e.getRole() + "," + e.getJoinedDate()+ "," + e.getPercentCompleted() + "," + e.getSalary() + "," + e.getNewSalary());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Could not write the file " + e);
+        }
+        return Path.of(fileName);
     }
 }
