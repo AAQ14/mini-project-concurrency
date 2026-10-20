@@ -18,4 +18,15 @@ public class Employee {
     private LocalDate joinedDate;
     private String role;
     private double percentCompleted;
+    private double newSalary;
+
+    public Employee(String name,  double salary, LocalDate joinedDate, String role, double percentCompleted ){
+        this.name = name;
+        this.salary = salary;
+        this.joinedDate = joinedDate;
+        this.role = role;
+        this.percentCompleted = percentCompleted;
+        this.newSalary = salary;
+    }
+
 }
