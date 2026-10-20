@@ -22,7 +22,14 @@ public class EmployeeService {
     private final Calculator calculator;
 
 
-
+    /**
+     * Reads the employees from the uploaded CSV and calculates each new salary
+     * concurrently using a fixed thread pool.
+     *
+     * @param file the uploaded employees CSV
+     * @return the employees with their newSalary set
+     * @throws  RuntimeException if processing times out or a thread is interrupted
+     */
     public List<Employee> processEmployee(MultipartFile file){
         AtomicInteger processedCount = new AtomicInteger();
         AtomicInteger raisesGivenCount = new AtomicInteger();

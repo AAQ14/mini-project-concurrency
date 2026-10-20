@@ -15,6 +15,14 @@ import java.util.Scanner;
 @Service
 public class FileService {
 
+    /**
+     * Reads employees from an uploaded CSV file.
+     *
+     * @param file the uploaded CSV file
+     * @return the list of employees read from the file
+     * @throws InvalidFileException if the file is empty or is not a .csv file
+     * @throws RuntimeException if the file cannot be read
+     */
     public List<Employee> readEmployees(MultipartFile file){
         validate(file);
         List<Employee> employees = new ArrayList<>();
@@ -40,6 +48,13 @@ public class FileService {
         return employees;
     }
 
+
+    /**
+     * hecks that the uploaded file is not empty and has a .csv extension.
+     *
+     * @param file the uploaded file
+     * @throws InvalidFileException if the file is empty or is not a .csv file
+     */
     private void validate(MultipartFile file){
         if(file == null || file.isEmpty()){
             throw new InvalidFileException("File is empty");
@@ -50,6 +65,15 @@ public class FileService {
         }
     }
 
+
+    /**
+     * Writes the employees with their old and new salaries to a new CSV file.
+     *
+     * @param employees the processed employees
+     * @return the path of the generated file
+     * @throws IOException if the output file cannot be created
+     * @throws RuntimeException if writing to the file fails
+     */
     public Path writeEmployees(List<Employee> employees) throws IOException {
         String fileName = "updated_employees_" + System.currentTimeMillis() + ".csv";
         FileWriter fw = new FileWriter(fileName);
